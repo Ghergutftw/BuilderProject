@@ -1,5 +1,5 @@
 package components;
 
 public enum Transmission {
-    SINGLE_SPEED, MANUAL, AUTOMATIC, SEMI_AUTOMATIC
+    MANUAL, AUTOMATIC, SEMI_AUTOMATIC
 }

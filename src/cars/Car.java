@@ -10,14 +10,16 @@ public class Car {
     private final TripComputer tripComputer;
     private final GPSNavigator gpsNavigator;
     private double fuel = 0;
+    private double price = 0;
 
-    public Car(CarType carType, Integer seats, Engine engine, Transmission transmission, TripComputer tripComputer, GPSNavigator gpsNavigator) {
+    public Car(CarType carType, Integer seats, Engine engine, Transmission transmission, TripComputer tripComputer, GPSNavigator gpsNavigator, double price) {
         this.carType = carType;
         this.seats = seats;
         this.engine = engine;
         this.transmission = transmission;
         this.tripComputer = tripComputer;
         this.gpsNavigator = gpsNavigator;
+        this.price = price;
     }
 
     public CarType getCarType() {
@@ -52,6 +54,14 @@ public class Car {
         this.fuel = fuel;
     }
 
+    public double getPrice() {
+        return price;
+    }
+
+    public void setPrice(double price) {
+        this.price = price;
+    }
+
     @Override
     public String toString() {
         return "Car{" +
@@ -62,6 +72,7 @@ public class Car {
                 ", tripComputer=" + tripComputer +
                 ", gpsNavigator=" + gpsNavigator +
                 ", fuel=" + fuel +
+                ", price=" + price +
                 '}';
     }
 }
