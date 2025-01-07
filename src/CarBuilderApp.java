@@ -25,12 +25,13 @@ class CarBuilderUI {
     private final JCheckBox gpsNavigatorCheckBox;
     private final JTextArea resultArea;
     private final JLabel priceLabel;
+    private final JLabel asciiArtLabel;  // Label for ASCII art
 
     public CarBuilderUI() {
         // Create the main frame
         JFrame frame = new JFrame("Constructor de Mașini");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 460);
+        frame.setSize(600, 460);  // Increased width to accommodate both text and image
         frame.setLayout(new BorderLayout(10, 10));
 
         // Main input panel with reduced spacing
@@ -111,18 +112,30 @@ class CarBuilderUI {
                         )
         );
 
-        // Result area
+        // Result panel with both text and image
         JPanel resultPanel = new JPanel();
         resultPanel.setBorder(BorderFactory.createTitledBorder("Detalii Mașină"));
         resultPanel.setLayout(new BorderLayout());
+
+        // Text area for car details
         resultArea = new JTextArea();
         resultArea.setEditable(false);
         resultArea.setLineWrap(true);
         resultArea.setWrapStyleWord(true);
         resultArea.setFont(new Font("Monospaced", Font.BOLD, 12));
-        resultArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 10px margin on all sides
+        resultArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));  // 10px margin on all sides
 
-        resultPanel.add(resultArea, BorderLayout.CENTER);
+        // Label for ASCII art
+        asciiArtLabel = new JLabel();
+        asciiArtLabel.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        asciiArtLabel.setVerticalAlignment(SwingConstants.TOP); // Align at the top
+
+        // Create a panel to hold both text and image side by side
+        JPanel sideBySidePanel = new JPanel(new GridLayout(1, 2, 10, 10));
+        sideBySidePanel.add(new JScrollPane(resultArea));
+        sideBySidePanel.add(asciiArtLabel);
+
+        resultPanel.add(sideBySidePanel, BorderLayout.CENTER);
 
         // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -131,7 +144,7 @@ class CarBuilderUI {
 
         // Add components to frame
         frame.add(inputPanel, BorderLayout.NORTH);
-        frame.add(resultArea, BorderLayout.CENTER);
+        frame.add(resultPanel, BorderLayout.CENTER);
         frame.add(buttonPanel, BorderLayout.SOUTH);
 
         // Add action listener
@@ -218,7 +231,6 @@ class CarBuilderUI {
         seatsField.getParent().repaint();
     }
 
-
     private class BuildCarActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -245,10 +257,10 @@ class CarBuilderUI {
 
                         builder.setCarType(CarType.CUSTOM);
                         builder.setSeats(seats);
-
                         builder.setTripComputer(includeTripComputer);
                         builder.setGPSNavigator(includeGPSNavigator);
                         builder.setEngineVolume(engineVolume);
+
                         // Set transmission
                         switch (transmission) {
                             case "Manuală" -> builder.setTransmission(Transmission.MANUAL);
@@ -257,7 +269,6 @@ class CarBuilderUI {
                             case null -> {}
                             default -> throw new IllegalStateException("Unexpected value: " + transmission);
                         }
-
                     }
                     default -> throw new IllegalStateException("Unexpected value: " + carType);
                 }
@@ -278,9 +289,12 @@ class CarBuilderUI {
                                 "Transmisie: " + getTransmission(car.getTransmission()) + "\n" +
                                 "Computer de Bord: " + (car.getTripComputer() != null ? "Da" : "Nu") + "\n" +
                                 "Navigator GPS: " + (car.getGpsNavigator() != null ? "Da" : "Nu") + "\n" +
-                                "Preț: " + String.format("%.2f", car.getPrice()) + "€" + "\n" +
-                                getCarAscii(car.getCarType())
+                                "Preț: " + String.format("%.2f", car.getPrice()) + "€" + "\n"
                 );
+
+                // Set ASCII art in label
+                asciiArtLabel.setText("<html><pre>" + getCarAscii(car.getCarType()) + "</pre></html>");
+
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Intrare invalidă: " + ex.getMessage(), "Eroare", JOptionPane.ERROR_MESSAGE);
             }
@@ -327,6 +341,4 @@ class CarBuilderUI {
               """;
         };
     }
-
 }
-
