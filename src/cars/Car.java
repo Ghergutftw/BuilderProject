@@ -1,24 +1,23 @@
 package cars;
 
-import components.*;
+import components.Transmission;
 
 public class Car {
     private final CarType carType;
     private final Integer seats;
-    private final Engine engine;
+    private final Double engineVolume;
     private final Transmission transmission;
-    private final TripComputer tripComputer;
-    private final GPSNavigator gpsNavigator;
-    private double fuel = 0;
-    private double price = 0;
+    private final Boolean hasTripComputer;
+    private final Boolean hasGPSNavigator;
+    private double price;
 
-    public Car(CarType carType, Integer seats, Engine engine, Transmission transmission, TripComputer tripComputer, GPSNavigator gpsNavigator, double price) {
+    public Car(CarType carType, Integer seats, Double engineVolume, Transmission transmission, Boolean hasTripComputer, Boolean hasGPSNavigator, double price) {
         this.carType = carType;
         this.seats = seats;
-        this.engine = engine;
+        this.engineVolume = engineVolume;
         this.transmission = transmission;
-        this.tripComputer = tripComputer;
-        this.gpsNavigator = gpsNavigator;
+        this.hasTripComputer = hasTripComputer;
+        this.hasGPSNavigator = hasGPSNavigator;
         this.price = price;
     }
 
@@ -30,28 +29,20 @@ public class Car {
         return seats;
     }
 
-    public Engine getEngine() {
-        return engine;
+    public Double getEngineVolume() {
+        return engineVolume;
     }
 
     public Transmission getTransmission() {
         return transmission;
     }
 
-    public TripComputer getTripComputer() {
-        return tripComputer;
+    public Boolean getTripComputer() {
+        return hasTripComputer;
     }
 
-    public GPSNavigator getGpsNavigator() {
-        return gpsNavigator;
-    }
-
-    public double getFuel() {
-        return fuel;
-    }
-
-    public void setFuel(double fuel) {
-        this.fuel = fuel;
+    public Boolean getGpsNavigator() {
+        return hasGPSNavigator;
     }
 
     public double getPrice() {
@@ -67,11 +58,10 @@ public class Car {
         return "Car{" +
                 "carType=" + carType +
                 ", seats=" + seats +
-                ", engine=" + engine +
+                ", engineVolume=" + engineVolume +
                 ", transmission=" + transmission +
-                ", tripComputer=" + tripComputer +
-                ", gpsNavigator=" + gpsNavigator +
-                ", fuel=" + fuel +
+                ", hasTripComputer=" + hasTripComputer +
+                ", hasGPSNavigator=" + hasGPSNavigator +
                 ", price=" + price +
                 '}';
     }

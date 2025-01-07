@@ -1,17 +1,14 @@
 import builders.CarBuilder;
 import cars.Car;
 import cars.CarType;
-import cars.Manual;
-import components.Engine;
 import components.Transmission;
-import components.TripComputer;
-import components.GPSNavigator;
 import director.Director;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Objects;
 
 public class CarBuilderApp {
     public static void main(String[] args) {
@@ -29,123 +26,230 @@ class CarBuilderUI {
     private final JLabel priceLabel;
 
     public CarBuilderUI() {
-        // Creare fereastră
+        // Create the main frame
         JFrame frame = new JFrame("Constructor de Mașini");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(700, 500);
+        frame.setSize(400, 420);
         frame.setLayout(new BorderLayout(10, 10));
 
-        // Panou principal pentru intrări
-        JPanel inputPanel = new JPanel(new GridLayout(6, 2, 10, 10));
-        inputPanel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        // Main input panel with reduced spacing
+        JPanel inputPanel = new JPanel();
+        GroupLayout layout = new GroupLayout(inputPanel);
+        inputPanel.setLayout(layout);
+        layout.setAutoCreateGaps(true);
+        layout.setAutoCreateContainerGaps(true);
 
-        // Tip mașină
-        inputPanel.add(new JLabel("Tip Mașină:"));
-        carTypeComboBox = new JComboBox<>(new String[]{"Mașină de Oraș", "Mașină Sport", "SUV"});
-        inputPanel.add(carTypeComboBox);
+        // Components for input panel
+        JLabel carTypeLabel = new JLabel("Tip Mașină:");
+        carTypeComboBox = new JComboBox<>(new String[]{"Custom", "Mașină de Oraș", "Mașină Sport", "SUV"});
+        carTypeComboBox.addActionListener(e -> toggleCustomFields());
 
-        // Număr de locuri
-        inputPanel.add(new JLabel("Locuri:"));
-        seatsField = new JTextField("2");
-        inputPanel.add(seatsField);
+        JLabel seatsLabel = new JLabel("Locuri:");
+        seatsField = new JTextField("4");
 
-        // Transmisie
-        inputPanel.add(new JLabel("Transmisie:"));
+        JLabel transmissionLabel = new JLabel("Transmisie:");
         transmissionComboBox = new JComboBox<>(new String[]{"Manuală", "Automată", "Semi-Automată"});
-        inputPanel.add(transmissionComboBox);
 
-        // Computer de bord
-        inputPanel.add(new JLabel("Computer de Bord:"));
+        JLabel tripComputerLabel = new JLabel("Computer de Bord:");
         tripComputerCheckBox = new JCheckBox("Include");
-        inputPanel.add(tripComputerCheckBox);
 
-        // Navigator GPS
-        inputPanel.add(new JLabel("Navigator GPS:"));
+        JLabel gpsNavigatorLabel = new JLabel("Navigator GPS:");
         gpsNavigatorCheckBox = new JCheckBox("Include");
-        inputPanel.add(gpsNavigatorCheckBox);
 
-        // Etichetă preț
-        JPanel pricePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         priceLabel = new JLabel("Preț: $0.00");
-        pricePanel.add(priceLabel);
 
-        // Zonă de afișare a rezultatelor
-        resultArea = new JTextArea(15, 40);
+        // Arrange components using GroupLayout
+        layout.setHorizontalGroup(
+                layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(carTypeLabel)
+                                .addComponent(seatsLabel)
+                                .addComponent(transmissionLabel)
+                                .addComponent(tripComputerLabel)
+                                .addComponent(gpsNavigatorLabel)
+                        )
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
+                                .addComponent(carTypeComboBox)
+                                .addComponent(seatsField)
+                                .addComponent(transmissionComboBox)
+                                .addComponent(tripComputerCheckBox)
+                                .addComponent(gpsNavigatorCheckBox)
+                        )
+        );
+
+        layout.setVerticalGroup(
+                layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(carTypeLabel)
+                                .addComponent(carTypeComboBox)
+                        )
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(seatsLabel)
+                                .addComponent(seatsField)
+                        )
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(transmissionLabel)
+                                .addComponent(transmissionComboBox)
+                        )
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(tripComputerLabel)
+                                .addComponent(tripComputerCheckBox)
+                        )
+                        .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                .addComponent(gpsNavigatorLabel)
+                                .addComponent(gpsNavigatorCheckBox)
+                        )
+        );
+
+        // Result area
+        JPanel resultPanel = new JPanel();
+        resultPanel.setBorder(BorderFactory.createTitledBorder("Detalii Mașină"));
+        resultPanel.setLayout(new BorderLayout());
+        resultArea = new JTextArea();
         resultArea.setEditable(false);
         resultArea.setLineWrap(true);
         resultArea.setWrapStyleWord(true);
-        resultArea.setMargin(new Insets(10, 10, 10, 10)); // Adaugă margini
-        resultArea.setFont(new Font("Monospaced", Font.PLAIN, 12)); // Font monospațiat pentru aliniere
-        JScrollPane scrollPane = new JScrollPane(resultArea);
-        scrollPane.setBorder(BorderFactory.createTitledBorder("Detalii Mașină"));
+        resultArea.setFont(new Font("Monospaced", Font.BOLD, 12));
+        resultArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10)); // 10px margin on all sides
 
-        // Panou pentru butonul de construire a mașinii
+        resultPanel.add(resultArea, BorderLayout.CENTER);
+
+        // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton buildCarButton = new JButton("Construiește Mașina");
         buttonPanel.add(buildCarButton);
 
-        // Adăugare componente în fereastră
+        // Add components to frame
         frame.add(inputPanel, BorderLayout.NORTH);
-        frame.add(scrollPane, BorderLayout.CENTER);
+        frame.add(resultArea, BorderLayout.CENTER);
         frame.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Adăugare ascultător de evenimente
+        // Add action listener
         buildCarButton.addActionListener(new BuildCarActionListener());
 
-        // Afișare fereastră
+        // Show the frame
         frame.setVisible(true);
     }
+
+    private String getTransmission(Transmission transmission) {
+        return switch (transmission) {
+            case MANUAL -> "Manuală";
+            case AUTOMATIC -> "Automată";
+            case SEMI_AUTOMATIC -> "Semi-Automată";
+            default -> "Necunoscut";
+        };
+    }
+
+    private String getCarType(CarType carType) {
+        return switch (carType) {
+            case CITY_CAR -> "Mașină de Oraș";
+            case SPORTS_CAR -> "Mașină Sport";
+            case SUV -> "SUV";
+            case CUSTOM -> "Custom";
+            default -> "Necunoscut";
+        };
+    }
+
+    private void toggleCustomFields() {
+        String selectedCarType = (String) carTypeComboBox.getSelectedItem();
+        boolean isCustom = Objects.equals(selectedCarType, "Custom");
+
+        // Enable/disable fields based on selection
+        seatsField.setEditable(isCustom);
+        transmissionComboBox.setEnabled(isCustom);
+        tripComputerCheckBox.setEnabled(isCustom);
+        gpsNavigatorCheckBox.setEnabled(isCustom);
+
+        if (!isCustom) {
+            // Pre-fill and disable fields for specific car types
+            switch (selectedCarType) {
+                case "Mașină de Oraș" -> {
+                    seatsField.setText("4");
+                    transmissionComboBox.setSelectedItem("Automată");
+                    tripComputerCheckBox.setSelected(false);
+                    gpsNavigatorCheckBox.setSelected(true);
+                }
+                case "Mașină Sport" -> {
+                    seatsField.setText("2");
+                    transmissionComboBox.setSelectedItem("Semi-Automată");
+                    tripComputerCheckBox.setSelected(true);
+                    gpsNavigatorCheckBox.setSelected(true);
+                }
+                case "SUV" -> {
+                    seatsField.setText("4");
+                    transmissionComboBox.setSelectedItem("Manuală");
+                    tripComputerCheckBox.setSelected(false);
+                    gpsNavigatorCheckBox.setSelected(true);
+                }
+                case null -> {}
+                default -> throw new IllegalStateException("Unexpected value: " + selectedCarType);
+            }
+        } else {
+            // Clear fields for custom input
+            seatsField.setText("4");
+            transmissionComboBox.setSelectedIndex(0);
+            tripComputerCheckBox.setSelected(false);
+            gpsNavigatorCheckBox.setSelected(false);
+        }
+
+        // Update visibility
+        seatsField.setVisible(true);
+        transmissionComboBox.setVisible(true);
+        tripComputerCheckBox.setVisible(true);
+        gpsNavigatorCheckBox.setVisible(true);
+
+        // Refresh UI
+        seatsField.getParent().revalidate();
+        seatsField.getParent().repaint();
+    }
+
 
     private class BuildCarActionListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             try {
-                // Preluare intrări utilizator
                 String carType = (String) carTypeComboBox.getSelectedItem();
-                int seats = Integer.parseInt(seatsField.getText());
-                String transmission = (String) transmissionComboBox.getSelectedItem();
                 boolean includeTripComputer = tripComputerCheckBox.isSelected();
                 boolean includeGPSNavigator = gpsNavigatorCheckBox.isSelected();
 
-                // Construire mașină folosind Director și Builder
+                // Create builder and director
                 CarBuilder builder = new CarBuilder();
-//                Director director = new Director();
-//
-//                switch (carType) {
-//                    case "Mașină de Oraș" -> director.constructCityCar(builder);
-//                    case "Mașină Sport" -> director.constructSportsCar(builder);
-//                    case "SUV" -> director.constructSUV(builder);
-//                    default -> throw new IllegalStateException("Unexpected value: " + carType);
-//                }
+                Director director = new Director();
 
-                // Personalizare mașină
-                builder.setSeats(seats);
-
+                // Use director for predefined car types
                 switch (carType) {
-                    case "Mașină de Oraș" -> builder.setCarType(CarType.CITY_CAR);
-                    case "Mașină Sport" -> builder.setCarType(CarType.SPORTS_CAR);
-                    case "SUV" -> builder.setCarType(CarType.SUV);
+                    case "Mașină de Oraș" -> director.constructCityCar(builder);
+                    case "Mașină Sport" -> director.constructSportsCar(builder);
+                    case "SUV" -> director.constructSUV(builder);
+                    case "Custom" -> {
+                        // Custom configuration
+                        int seats = Integer.parseInt(seatsField.getText());
+                        String transmission = (String) transmissionComboBox.getSelectedItem();
+
+                        builder.setCarType(CarType.CUSTOM);
+                        builder.setSeats(seats);
+
+                        // Set transmission
+                        switch (transmission) {
+                            case "Manuală" -> builder.setTransmission(Transmission.MANUAL);
+                            case "Automată" -> builder.setTransmission(Transmission.AUTOMATIC);
+                            case "Semi-Automată" -> builder.setTransmission(Transmission.SEMI_AUTOMATIC);
+                            default -> throw new IllegalStateException("Unexpected value: " + transmission);
+                        }
+
+                        builder.setTripComputer(includeTripComputer);
+                        builder.setGPSNavigator(includeGPSNavigator);
+                    }
+                    default -> throw new IllegalStateException("Unexpected value: " + carType);
                 }
 
-                if (includeTripComputer) {
-                    builder.setTripComputer(new TripComputer());
-                }
-                if (includeGPSNavigator) {
-                    builder.setGPSNavigator(new GPSNavigator());
-                }
-
-                switch (transmission) {
-                    case "Manuală" -> builder.setTransmission(Transmission.MANUAL);
-                    case "Automată" -> builder.setTransmission(Transmission.AUTOMATIC);
-                    case "Semi-Automată" -> builder.setTransmission(Transmission.SEMI_AUTOMATIC);
-                }
-
+                // Get the constructed car
                 Car car = builder.getResult();
 
-                // Actualizare etichetă preț
+                // Update price label
                 priceLabel.setText("Preț: $" + String.format("%.2f", car.getPrice()));
 
-                // Afișare detalii mașină
+                // Display car details
                 resultArea.setText(
                         "Mașină Construită:\n" +
                                 "-------------------\n" +
@@ -154,7 +258,7 @@ class CarBuilderUI {
                                 "Transmisie: " + getTransmission(car.getTransmission()) + "\n" +
                                 "Computer de Bord: " + (car.getTripComputer() != null ? "Da" : "Nu") + "\n" +
                                 "Navigator GPS: " + (car.getGpsNavigator() != null ? "Da" : "Nu") + "\n" +
-                                "Preț: $" + String.format("%.2f", car.getPrice()) + "\n"
+                                "Preț: " + String.format("%.2f", car.getPrice()) + "€" + "\n"
                 );
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(null, "Intrare invalidă: " + ex.getMessage(), "Eroare", JOptionPane.ERROR_MESSAGE);
@@ -162,41 +266,5 @@ class CarBuilderUI {
         }
     }
 
-    private String getTransmission(Transmission transmission) {
-        switch (transmission) {
-            case MANUAL -> {
-                return "Manuală";
-            }
-            case AUTOMATIC -> {
-                return "Automată";
-            }
-            case SEMI_AUTOMATIC -> {
-                return "Semi-Automată";
-            }
-            default -> {
-                return "Necunoscut";
-            }
-        }
-    }
-
-    private String getCarType(CarType carType) {
-        switch (carType) {
-            case CITY_CAR -> {
-                return "Mașină de Oraș";
-            }
-            case SPORTS_CAR -> {
-                return "Mașină Sport";
-            }
-            case SUV -> {
-                return "SUV";
-            }
-            case VAN -> {
-                return "Van";
-            }
-            default -> {
-                return "Necunoscut";
-            }
-        }
-    }
 }
 

@@ -1,13 +1,16 @@
 package builders;
 
 import cars.CarType;
-import components.*;
+import components.Transmission;
 
 public interface Builder {
     void setCarType(CarType type);
     void setSeats(int seats);
-    void setEngine(Engine engine);
+
+    void setEngineVolume(Double engineVolume);
     void setTransmission(Transmission transmission);
-    void setTripComputer(TripComputer tripComputer);
-    void setGPSNavigator(GPSNavigator gpsNavigator);
+
+    void setTripComputer(Boolean hasTripComputer);
+
+    void setGPSNavigator(Boolean hasGPSNavigator);
 }

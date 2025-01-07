@@ -2,15 +2,15 @@ package builders;
 
 import cars.Car;
 import cars.CarType;
-import components.*;
+import components.Transmission;
 
 public class CarBuilder implements Builder {
     private CarType type;
     private Integer seats;
-    private Engine engine;
+    private Double engineVolume;
     private Transmission transmission;
-    private TripComputer tripComputer;
-    private GPSNavigator gpsNavigator;
+    private Boolean hasTripComputer;
+    private Boolean hasGPSNavigator;
 
     private double price = 0;
 
@@ -19,36 +19,35 @@ public class CarBuilder implements Builder {
         switch (type)
         {
             case CITY_CAR:
-                this.price += 10000;
+                this.price += 15000; // Adjusted for a more realistic base price
                 break;
             case SPORTS_CAR:
-                this.price += 50000;
+                this.price += 40000; // More realistic for sports cars
                 break;
             case SUV:
-                this.price += 30000;
+                this.price += 35000; // Adjusted for a typical SUV price
                 break;
-            case VAN:
-                this.price += 70000;
+            case CUSTOM:
+                this.price += 25000; // Adjusted for a typical van price
                 break;
         }
-
     }
 
     @Override
     public void setSeats(int seats) {
         this.seats = seats;
-        this.price += seats * 100;
+        this.price += seats * 200; // Adjusted price per seat to reflect real-world pricing
     }
 
     @Override
-    public void setEngine(Engine engine) {
-        this.engine = engine;
-        if(engine.getVolume() < 1.5){
-            this.price += 1000;
-        } else if (engine.getVolume() < 2.0){
-            this.price += 2000;
+    public void setEngineVolume(Double engineVolume) {
+        this.engineVolume = engineVolume;
+        if (engineVolume < 1.5) {
+            this.price += 1500; // More reasonable price increase for smaller engines
+        } else if (engineVolume < 2.0) {
+            this.price += 2500; // Moderate price increase for medium engines
         } else {
-            this.price += 3000;
+            this.price += 4000; // Larger price increase for larger engines
         }
     }
 
@@ -56,25 +55,25 @@ public class CarBuilder implements Builder {
     public void setTransmission(Transmission transmission) {
         this.transmission = transmission;
         if(transmission == Transmission.AUTOMATIC){
-            this.price += 2000;
+            this.price += 2500; // Slightly higher price for automatic transmission
         } else {
-            this.price += 1000;
+            this.price += 1200; // More realistic price for manual transmission
         }
     }
 
     @Override
-    public void setTripComputer(TripComputer tripComputer) {
-        this.tripComputer = tripComputer;
-        this.price += 1000;
+    public void setTripComputer(Boolean hasTripComputer) {
+        this.hasTripComputer = hasTripComputer;
+        this.price += 1500; // Reasonable price for adding a trip computer
     }
 
     @Override
-    public void setGPSNavigator(GPSNavigator gpsNavigator) {
-        this.gpsNavigator = gpsNavigator;
-        this.price += 1500;
+    public void setGPSNavigator(Boolean hasGPSNavigator) {
+        this.hasGPSNavigator = hasGPSNavigator;
+        this.price += 2000; // More reasonable price for adding GPS Navigator
     }
 
     public Car getResult() {
-        return new Car(type, seats, engine, transmission, tripComputer, gpsNavigator,price);
+        return new Car(type, seats, engineVolume, transmission, hasTripComputer, hasGPSNavigator, price);
     }
 }
