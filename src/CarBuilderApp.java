@@ -25,13 +25,13 @@ class CarBuilderUI {
     private final JCheckBox gpsNavigatorCheckBox;
     private final JTextArea resultArea;
     private final JLabel priceLabel;
-    private final JLabel asciiArtLabel;  // Label for ASCII art
+    private final JLabel asciiArtLabel;
 
     public CarBuilderUI() {
         // Create the main frame
         JFrame frame = new JFrame("Constructor de Mașini");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(1000, 550);  // Increased width to accommodate both text and image
+        frame.setSize(1000, 550);
         frame.setLayout(new BorderLayout(10, 10));
 
         // Main input panel with reduced spacing
@@ -112,45 +112,37 @@ class CarBuilderUI {
                         )
         );
 
-        // Result panel with both text and image
         JPanel resultPanel = new JPanel();
         resultPanel.setBorder(BorderFactory.createTitledBorder("Detalii Mașină"));
         resultPanel.setLayout(new BorderLayout());
 
-        // Text area for car details
         resultArea = new JTextArea();
         resultArea.setEditable(false);
         resultArea.setLineWrap(true);
         resultArea.setWrapStyleWord(true);
         resultArea.setFont(new Font("Monospaced", Font.BOLD, 16));
-        resultArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));  // 10px margin on all sides
+        resultArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
-        // Label for ASCII art
         asciiArtLabel = new JLabel();
         asciiArtLabel.setFont(new Font("Monospaced", Font.PLAIN, 16));
-        asciiArtLabel.setVerticalAlignment(SwingConstants.TOP); // Align at the top
+        asciiArtLabel.setVerticalAlignment(SwingConstants.TOP);
 
-        // Create a panel to hold both text and image side by side
         JPanel sideBySidePanel = new JPanel(new GridLayout(1, 2, 10, 10));
         sideBySidePanel.add(new JScrollPane(resultArea));
         sideBySidePanel.add(asciiArtLabel);
 
         resultPanel.add(sideBySidePanel, BorderLayout.CENTER);
 
-        // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         JButton buildCarButton = new JButton("Construiește Mașina");
         buttonPanel.add(buildCarButton);
 
-        // Add components to frame
         frame.add(inputPanel, BorderLayout.NORTH);
         frame.add(resultPanel, BorderLayout.CENTER);
         frame.add(buttonPanel, BorderLayout.SOUTH);
 
-        // Add action listener
         buildCarButton.addActionListener(new BuildCarActionListener());
 
-        // Show the frame
         frame.setVisible(true);
     }
 
@@ -175,7 +167,6 @@ class CarBuilderUI {
         String selectedCarType = (String) carTypeComboBox.getSelectedItem();
         boolean isCustom = Objects.equals(selectedCarType, "Custom");
 
-        // Enable/disable fields based on selection
         seatsField.setEditable(isCustom);
         engineVolumField.setEditable(isCustom);
         transmissionComboBox.setEnabled(isCustom);
@@ -183,7 +174,6 @@ class CarBuilderUI {
         gpsNavigatorCheckBox.setEnabled(isCustom);
 
         if (!isCustom) {
-            // Pre-fill and disable fields for specific car types
             switch (selectedCarType) {
                 case "Mașină de Oraș" -> {
                     seatsField.setText("4");
@@ -210,7 +200,6 @@ class CarBuilderUI {
                 default -> throw new IllegalStateException("Unexpected value: " + selectedCarType);
             }
         } else {
-            // Clear fields for custom input
             seatsField.setText("4");
             transmissionComboBox.setSelectedIndex(0);
             engineVolumField.setText("1.6");
@@ -218,13 +207,11 @@ class CarBuilderUI {
             gpsNavigatorCheckBox.setSelected(false);
         }
 
-        // Update visibility
         seatsField.setVisible(true);
         transmissionComboBox.setVisible(true);
         tripComputerCheckBox.setVisible(true);
         gpsNavigatorCheckBox.setVisible(true);
 
-        // Refresh UI
         seatsField.getParent().revalidate();
         seatsField.getParent().repaint();
     }
@@ -238,17 +225,14 @@ class CarBuilderUI {
                 boolean includeTripComputer = tripComputerCheckBox.isSelected();
                 boolean includeGPSNavigator = gpsNavigatorCheckBox.isSelected();
 
-                // Create builder and director
                 CarBuilder builder = new CarBuilder();
                 Director director = new Director();
 
-                // Use director for predefined car types
                 switch (Objects.requireNonNull(carType)) {
                     case "Mașină de Oraș" -> director.constructCityCar(builder);
                     case "Mașină Sport" -> director.constructSportsCar(builder);
                     case "SUV" -> director.constructSUV(builder);
                     case "Custom" -> {
-                        // Custom configuration
                         int seats = Integer.parseInt(seatsField.getText());
                         double engineVolume = Double.parseDouble(engineVolumField.getText());
                         String transmission = (String) transmissionComboBox.getSelectedItem();
@@ -259,7 +243,6 @@ class CarBuilderUI {
                         builder.setGPSNavigator(includeGPSNavigator);
                         builder.setEngineVolume(engineVolume);
 
-                        // Set transmission
                         switch (transmission) {
                             case "Manuală" -> builder.setTransmission(Transmission.MANUAL);
                             case "Automată" -> builder.setTransmission(Transmission.AUTOMATIC);
@@ -271,13 +254,10 @@ class CarBuilderUI {
                     default -> throw new IllegalStateException("Unexpected value: " + carType);
                 }
 
-                // Get the constructed car
                 Car car = builder.getResult();
 
-                // Update price label
                 priceLabel.setText("Preț: $" + String.format("%.2f", car.getPrice()));
 
-                // Display car details
                 resultArea.setText(
                         "Mașină Construită:\n" +
                                 "-------------------\n" +
@@ -290,7 +270,6 @@ class CarBuilderUI {
                                 "Preț: " + String.format("%.2f", car.getPrice()) + "€" + "\n"
                 );
 
-                // Set ASCII art in label
                 asciiArtLabel.setText("<html><pre>" + getCarAscii(car.getCarType()) + "</pre></html>");
 
             } catch (Exception ex) {

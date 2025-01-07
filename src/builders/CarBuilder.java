@@ -19,16 +19,16 @@ public class CarBuilder implements Builder {
         switch (type)
         {
             case CITY_CAR:
-                this.price += 15000; // Adjusted for a more realistic base price
+                this.price += 15000;
                 break;
             case SPORTS_CAR:
-                this.price += 40000; // More realistic for sports cars
+                this.price += 40000;
                 break;
             case SUV:
-                this.price += 35000; // Adjusted for a typical SUV price
+                this.price += 35000;
                 break;
             case CUSTOM:
-                this.price += 25000; // Adjusted for a typical van price
+                this.price += 25000;
                 break;
         }
     }
@@ -36,18 +36,18 @@ public class CarBuilder implements Builder {
     @Override
     public void setSeats(int seats) {
         this.seats = seats;
-        this.price += seats * 200; // Adjusted price per seat to reflect real-world pricing
+        this.price += seats * 200;
     }
 
     @Override
     public void setEngineVolume(Double engineVolume) {
         this.engineVolume = engineVolume;
         if (engineVolume < 1.5) {
-            this.price += 1500; // More reasonable price increase for smaller engines
+            this.price += 1500;
         } else if (engineVolume < 2.0) {
-            this.price += 2500; // Moderate price increase for medium engines
+            this.price += 2500;
         } else {
-            this.price += 4000; // Larger price increase for larger engines
+            this.price += 4000;
         }
     }
 
@@ -55,9 +55,9 @@ public class CarBuilder implements Builder {
     public void setTransmission(Transmission transmission) {
         this.transmission = transmission;
         if(transmission == Transmission.AUTOMATIC){
-            this.price += 2500; // Slightly higher price for automatic transmission
+            this.price += 2500;
         } else {
-            this.price += 1200; // More realistic price for manual transmission
+            this.price += 1200;
         }
     }
 
