@@ -31,7 +31,7 @@ class CarBuilderUI {
         // Create the main frame
         JFrame frame = new JFrame("Constructor de Mașini");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 460);  // Increased width to accommodate both text and image
+        frame.setSize(1000, 550);  // Increased width to accommodate both text and image
         frame.setLayout(new BorderLayout(10, 10));
 
         // Main input panel with reduced spacing
@@ -122,12 +122,12 @@ class CarBuilderUI {
         resultArea.setEditable(false);
         resultArea.setLineWrap(true);
         resultArea.setWrapStyleWord(true);
-        resultArea.setFont(new Font("Monospaced", Font.BOLD, 12));
+        resultArea.setFont(new Font("Monospaced", Font.BOLD, 16));
         resultArea.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));  // 10px margin on all sides
 
         // Label for ASCII art
         asciiArtLabel = new JLabel();
-        asciiArtLabel.setFont(new Font("Monospaced", Font.PLAIN, 12));
+        asciiArtLabel.setFont(new Font("Monospaced", Font.PLAIN, 16));
         asciiArtLabel.setVerticalAlignment(SwingConstants.TOP); // Align at the top
 
         // Create a panel to hold both text and image side by side
@@ -159,7 +159,6 @@ class CarBuilderUI {
             case MANUAL -> "Manuală";
             case AUTOMATIC -> "Automată";
             case SEMI_AUTOMATIC -> "Semi-Automată";
-            default -> "Necunoscut";
         };
     }
 
@@ -169,7 +168,6 @@ class CarBuilderUI {
             case SPORTS_CAR -> "Mașină Sport";
             case SUV -> "SUV";
             case CUSTOM -> "Custom";
-            default -> "Necunoscut";
         };
     }
 
@@ -304,17 +302,27 @@ class CarBuilderUI {
     private String getCarAscii(CarType carType) {
         return switch (carType) {
             case CITY_CAR -> """
-                 ______
-               _/  |   \\_
-              |           |
-              |___________|
-              O           O
-              """;
+               -           __
+             --          ~( @\\   \\
+            ---   _________]_[__/_>________
+                 /  ____ \\ <>     |  ____  \\
+                =\\_/ __ \\_\\_______|_/ __ \\__D
+            ________(__)_____________(__)____
+             \s""";
             case SPORTS_CAR -> """
-                 ______
-                /|_||_\\`.__
-               (   _    _ _\\
-               =`-(_)--(_)-'
+                                  ____----------- _____
+                    \\~~~~~~~~~~/~_--~~~------~~~~~     \\
+                     `---`\\  _-~      |                   \\
+                       _-~  <_         |                     \\[]
+                     / ___     ~~--[""] |      ________-------'_
+                    > /~` \\    |-.   `\\~~.~~~~~                _ ~ - _
+                     ~|  ||\\%  |       |    ~  ._                ~ _   ~ ._
+                       `_//|_%  \\      |          ~  .              ~-_   /\\
+                              `--__     |    _-____  /\\               ~-_ \\/.
+                                   ~--_ /  ,/ -~-_ \\ \\/          _______---~/
+                                       ~~-/._<   \\ \\`~~~~~~~~~~~~~     ##--~/
+                                             \\    ) |`------##---~~~~-~  ) )
+                                              ~-_/_/                  ~~ ~~
               """;
             case SUV -> """
                 _______
@@ -323,21 +331,15 @@ class CarBuilderUI {
         )  _          _    \\
         |_/ \\________/ \\___|
         ___\\_/________\\_/_____
-              """;
+             \s""";
             case CUSTOM -> """
-               _______
-             _/       \\_
-            |           |
-           (|  Custom   |)
-            |___________|
-             O         O
-              """;
-            default -> """
-                 ______
-               _/  |   \\_
-              |           |
-              |___________|
-              O           O
+                                                      @
+                                   (__)    (__) _____/
+                                /| (oo) _  (oo)/----/_____    *
+                      _o\\______/_|\\_\\/_/_|__\\/|____|//////== *- *  * -
+                     /_________   \\   00 |   00 |       /== -* * -
+                    [_____/^^\\_____\\_____|_____/^^\\_____]     *- * -
+                          \\__/                 \\__/
               """;
         };
     }
