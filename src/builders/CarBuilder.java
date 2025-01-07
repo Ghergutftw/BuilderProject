@@ -64,13 +64,17 @@ public class CarBuilder implements Builder {
     @Override
     public void setTripComputer(Boolean hasTripComputer) {
         this.hasTripComputer = hasTripComputer;
-        this.price += 1500; // Reasonable price for adding a trip computer
+        if(hasTripComputer){
+            this.price += 1500;
+        }
     }
 
     @Override
     public void setGPSNavigator(Boolean hasGPSNavigator) {
         this.hasGPSNavigator = hasGPSNavigator;
-        this.price += 2000; // More reasonable price for adding GPS Navigator
+        if(hasGPSNavigator){
+            this.price += 2000;
+        }
     }
 
     public Car getResult() {
